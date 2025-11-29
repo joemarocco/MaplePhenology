@@ -1,112 +1,161 @@
-# Climate & Maple Phenology in Northern NY and VT  
-**Author:** Joe Marocco  
-**Status:** In Progress | 2025
+# Climate & Maple Phenology in Northern NY and VT
+**Joe Marocco**  
+2025  
 
-## Project Overview
+## Introduction
 
-This project explores whether the timing of maple sap flow in northern New York and Vermont has shifted over the past century. Sap flow depends on freeze–thaw temperature cycles, and changes in winter climate may influence when the sugaring season begins, ends, and how long it lasts.
+Maple sugaring is one of the most distinctive seasonal events in the northeastern United States. In northern New York and Vermont, the sap season not only carries cultural and economic importance but also marks an ecological transition that relies on a very specific temperature rhythm: freezing nights followed by thawing days. As winters warm, many sugar makers report earlier seasons, more erratic runs, or shorter operational windows.
 
-Using NOAA Global Historical Climatology Network (GHCN Daily) records from seven long-term stations, I reconstructed:
+However, long-term scientific records that quantify this phenomenon are sparse. Direct historical sap-flow records are inconsistent, site-specific, or missing entirely before the 1970s. Daily temperature archives, on the other hand, extend back more than a century.
 
-- First sap-favorable day  
-- Last sap-favorable day  
-- Sap-window length (days between first and last sap days)  
-- Sap-favorable day index (total freeze–thaw days, Feb–Apr)
+This project reconstructs sap-season timing using freeze–thaw temperature patterns from long-running NOAA weather stations. It examines whether the maple sap window has shifted in:
 
-I expected climate warming to compress the sap window. Surprisingly, the long-term trends were small and not statistically significant.
+- onset (first sap-favorable day),
+- termination (last sap-favorable day),
+- duration (sap window length), and
+- overall quality (number of sap-favorable days).
 
-## Motivation
+The analysis focuses on seven long-term stations in northern NY and VT — a region cool enough that sap flow remains closely tied to winter temperature variability.
 
-Maple sugaring has deep cultural and personal meaning in the region where I live. I wanted to understand whether long-term weather records support the idea that sap season is shifting due to climate change. This project also served as a hands-on data analysis and R programming exercise.
+## Purpose Statement
 
-## Repository Structure
+This analysis examines whether warming winter and early-spring temperatures have shifted the timing and structure of the maple sugaring season in northern New York and Vermont over the past several decades. Maple sap flow depends on a narrow temperature dynamic — freezing nights followed by thawing days — making the season especially sensitive to small climatic shifts. Using daily historical temperature data from long-running NOAA weather stations, this project reconstructs sap-flow “windows” from freeze–thaw conditions as a climate-based proxy for biological timing.
 
-```
-├── RawData/              # Raw GHCN station CSV files and metadata
-├── Scripts/              # R scripts for cleaning and analysis
-├── Results/              # Exported plots and summary tables
-├── Results/Visuals       # Exported .png visuals
-├── MaplePhenology.R      # Main analysis script
-├── MaplePhenologyVisuals.R     # Visuals script
-└── README.md             # Project overview (this file)
-```
+## Hypotheses
 
-## Data Sources
+**H1: Earlier Onset**  
+First sap-favorable freeze–thaw cycles now arrive earlier in the calendar year.
 
-All climate data was downloaded from the NOAA Global Historical Climatology Network (GHCN Daily):
+**H2: Earlier Termination**  
+The final occurrence of sap-favorable conditions is also shifting earlier.
 
-https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily
+**H3: Window Compression**  
+The total sap-window span has shortened (i.e., season length is shrinking).
 
-Stations used in this analysis:
+**H4: Declining Sap Opportunity**  
+The total number of sap-favorable days (freeze–thaw days) has declined.
 
-- Colebrook, NH  
-- Hanover, NH  
-- Newport, VT  
-- Enosburg Falls, VT  
-- Lake Placid, NY  
-- Tupper Lake, NY  
-- Dannemora, NY  
+## Sap Proxy Definitions
 
-These sites have long and relatively complete temperature records suitable for century-scale analysis. They also reside in approximately the same latitudes.
+Because direct sap-flow records are limited, this project uses daily temperature to infer sap-flow potential.
 
-## Methods
+### Definition: Sap-Favorable Day
+A day is considered sap-favorable if:
 
-1. Download daily NOAA data for each station.  
-2. Clean and reshape the raw data into a daily temperature table.  
-3. Convert GHCN temperature units (tentths of °C) into °F.  
-4. Identify “sap-favorable” freeze–thaw days:
-   - Tmin ≤ 32°F  
-   - Tmax between 33°F and 55°F  
-5. Use a rolling 4-day window to determine the first sustained sap period, then the last sap day.  
-6. Compute yearly metrics for each station.  
-7. Visualize long-term trends with ggplot2.  
-8. Fit simple linear models and run Mann–Kendall trend tests to evaluate statistical significance.
+- Tmin ≤ 32°F  
+- Tmax ≥ 33°F and ≤ ~55°F  
 
-The entire workflow is implemented in `MaplePhenology.R`.
+These thresholds represent a freeze followed by a thaw during the same 24-hour period — the physical driver of sap movement in sugar maple xylem.
 
-## Key Findings
+### Definition: Sap Season Window
+For each year:
 
-Across all stations and metrics, long-term trends were **small and not statistically significant**.
+- **First Sap Day (FSW)** = earliest sap-favorable day between February–April  
+- **Last Sap Day (LSW)** = final sap-favorable day after FSW  
 
-**Summary:**
+**Sap-Window Length = LSW – FSW + 1**
 
-- First sap-favorable day: slight tendency toward earlier dates, not significant.  
-- Last sap-favorable day: slight tendency toward later dates, not significant.  
-- Sap-window length: weak tendency to lengthen, not significant.  
-- Sap-favorable day index: effectively flat (no trend).
+This captures the climatological envelope of conditions that could support sap flow.
 
-Although year-to-year variability is large, the overall sap season in this region appears to have been **remarkably stable** over the instrumental climate record.
+### Definition: Sap-Friendly Days Index
+The **Sap Days Index** is the total number of freeze–thaw days between February and April.
 
-## Visualizations
+This distinguishes among:
 
-The `/Results/Visuals` folder contains:
+- early but low-quality seasons  
+- late but productive ones  
+- long but sparse windows  
+- short but intense seasons  
 
-- Trends in first sap day  
-- Trends in last sap day  
-- Sap-window length over time  
-- Sap-favorable day index  
-- Rolling 10-year averages  
-- Station-level comparisons  
+### Definition: Year-to-Year Variability
+Assessed via:
 
-Plots were generated using ggplot2.
+- standard deviation of onset  
+- standard deviation of termination  
+- variation in sap days per year  
 
-## Skills Demonstrated
+### Justification for Threshold Choices
+A 32°F threshold reflects the physical freezing point of water and is standard in freeze–thaw phenology studies.
 
-- Data wrangling with tidyverse  
-- Working with large climate datasets  
-- Defining and computing environmental metrics  
-- Rolling window operations (slider)  
-- ggplot2 time-series visualization  
-- Trend analysis (OLS, Mann–Kendall)  
-- Reproducible R scripting  
-- Project organization and documentation  
+## Methods (Plain Language)
+
+1. Download raw GHCN station data from NOAA.  
+2. Reshape data into daily minimum and maximum temps.  
+3. Convert temperatures from tenths of °C to °F.  
+4. Identify sap-favorable days using freeze–thaw thresholds.  
+5. Use 4-day rolling windows to detect earliest sustained sap activity.  
+6. Determine yearly first sap day (FSW), last sap day (LSW), and window length.  
+7. Compute sap-friendly days index.  
+8. Visualize annual and regional patterns.  
+9. Fit linear regressions and Mann–Kendall trend tests.
+
+## Results
+
+### Outliers and Data Integrity
+
+Some years displayed unusually short windows (8–20 days), but these occurred at different stations, in different years, with no clustering, and were meteorologically plausible. They do not influence regional trend conclusions.
+
+### 1. First Sap Day
+
+- **Slope = –0.013 days/year (~–0.13 days/decade)**  
+- **p = 0.46**  
+No significant trend.
+
+### 2. Last Sap Day
+
+- **Slope = +0.015 days/year (+0.15 days/decade)**  
+- **p = 0.15**  
+No significant trend.
+
+### 3. Sap-Window Length
+
+- **Slope = +0.028 days/year (+0.28 days/decade)**  
+- **p = 0.15**
+
+### 4. Sap-Friendly Days Index
+
+- **Slope = –0.0026 days/year**  
+- **p = 0.84**
+
+### 5. Station-Level Trends
+
+Across stations, slopes varied but none showed strong or consistent trends.
+
+### 6. Summary of Results
+
+- No statistically significant trends.  
+- Minimal directional change.  
+- High interannual variability dominates.
+
+## Discussion
+
+This study set out to determine whether maple sap phenology in northern NY and VT has shifted due to climate change. Contrary to expectations, the analysis found no significant long-term shifts in onset, ending, window length, or sap-friendly days.
+
+### Key factors:
+
+1. **High Natural Variability**  
+2. **Geographical Buffering**  
+3. **Physical Stability of Freeze–Thaw Oscillations**  
+4. **Proxy Measures Opportunity, Not Yield**  
+5. **Nonlinear Climate Signals**
+
+## Limitations
+
+- Station data may not reflect sugarbush microclimates.  
+- Thresholds simplify complex physiology.  
+- Missing data introduce noise.  
+- The proxy captures potential, not actual sap flow.
+
+## Conclusion
+
+Over more than a century of observation, maple sap phenology in northern New York and Vermont appears remarkably stable. While daily winter temperatures have warmed, the specific freeze–thaw pattern required for sap movement shows no significant long-term trend.
+
+This provides a baseline for future monitoring and a reproducible framework for ongoing study.
 
 ## Future Work
 
-- Experiment with alternate freeze–thaw thresholds  
-- Integrate maple syrup production records  
-
-## Contact
-
-If you have suggestions or want to discuss the project, feel free to open an issue or reach out.
-# MaplePhenology
+- Integrate syrup production statistics  
+- Explore degree-day models  
+- Use nonlinear climate models  
+- Add stations from more regions  
+- Re-run analysis periodically
