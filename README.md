@@ -49,7 +49,7 @@ Stations used in this analysis:
 
 These sites have long and relatively complete temperature records suitable for century-scale analysis. They also reside in approximately the same latitudes.
 
-## Methods (Plain Language)
+## Methods
 
 1. Download daily NOAA data for each station.  
 2. Clean and reshape the raw data into a daily temperature table.  
