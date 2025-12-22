@@ -15,11 +15,11 @@ This project reconstructs sap-season timing using freeze–thaw temperature patt
 - duration (sap window length), and
 - overall quality (number of sap-favorable days).
 
-The analysis focuses on seven long-term stations in northern NY and VT — a region cool enough that sap flow remains closely tied to winter temperature variability.
+The analysis focuses on seven long-term stations in northern NY and VT, a region that is cool enough that sap flow remains closely tied to winter temperature variability.
 
 ## Purpose Statement
 
-This analysis examines whether warming winter and early-spring temperatures have shifted the timing and structure of the maple sugaring season in northern New York and Vermont over the past several decades. Maple sap flow depends on a narrow temperature dynamic — freezing nights followed by thawing days — making the season especially sensitive to small climatic shifts. Using daily historical temperature data from long-running NOAA weather stations, this project reconstructs sap-flow “windows” from freeze–thaw conditions as a climate-based proxy for biological timing.
+This analysis examines whether warming winter and early-spring temperatures have shifted the timing and structure of the maple sugaring season in northern New York and Vermont over the past several decades. Maple sap flow depends on a narrow temperature dynamic: freezing nights followed by thawing days. Because of this, the season especially sensitive to small climatic shifts. Using daily historical temperature data from long-running NOAA weather stations, this project reconstructs sap-flow “windows” from freeze–thaw conditions as a climate-based proxy for biological timing.
 
 ## Hypotheses
 
